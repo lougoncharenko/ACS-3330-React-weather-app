@@ -1,10 +1,35 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
-export const Search = ({city, setCity}) => {
+export const Search = ({city, setCity, setWeatherData}) => {
   // Function to handle input changes
   const handleInputChange = (e) => {
     setCity(e.target.value);
   };
+
+  const fetchWeatherData = async () => {
+    console.log('this is running')
+    try {
+      const unit = "imperial"; // or "metric" for Celsius
+      const response = await fetch('https://api.openweathermap.org/data/2.5/weather?q=' + city + '&units='+ unit + '&appid=d71be756535b836342b5fa5e644f8f8e')
+      if (!response.ok) {
+        throw new Error(`Failed to fetch weather data. Status: ${response.status}`);
+      }
+  
+      const data = await response.json();
+      setWeatherData({ data: data });
+    } catch (error) {
+      console.error("Error fetching weather data:", error.message);
+    }
+  };
+
+ 
+  useEffect(() => {
+    if (!city) {
+        city = 'Sarasota'
+        fetchWeatherData()
+    }
+
+  }, []);
 
   // Function to handle form submission
   const handleSubmit = (e) => {
@@ -12,6 +37,8 @@ export const Search = ({city, setCity}) => {
     // You can use the 'city' state value here for further processing
     console.log("City entered:", city);
     // Add your search logic or API call here
+    setCity(e.target.value);
+    fetchWeatherData()
   };
 
   return (
