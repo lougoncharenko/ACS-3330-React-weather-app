@@ -1,6 +1,8 @@
-import React, { useEffect} from "react";
+import React, { useState, useEffect} from "react";
+import ErrorDisplay from "../ErrorDisplay/ErrorDisplay";
 
 export const Search = ({ input, setInput, setWeatherData, unit, setUnit }) => {
+  const [error, setError] = useState('');
   const handleInputChange = (e) => {
     console.log(e.target.value);
     setInput(e.target.value);
@@ -13,24 +15,30 @@ export const Search = ({ input, setInput, setWeatherData, unit, setUnit }) => {
   const fetchWeatherData = async (input) => {
     try {
       let url = "";
-      let secondUrl = '';
-      if (/\d/.test(input)) {
+     if (/^\d+$/.test(input) || /^[A-Za-z]+$/.test(input)) {
+      setError('');
+       if (/\d/.test(input)) {
         url = `https://api.openweathermap.org/data/2.5/weather?zip=${input},us&units=${unit}&appid=d71be756535b836342b5fa5e644f8f8e`;
       } else {
         url = `https://api.openweathermap.org/data/2.5/weather?q=${input}&units=${unit}&appid=d71be756535b836342b5fa5e644f8f8e`;
       }
+     } else {
+      setError('Not a valid Input! Try again')
+     }
+     
 
       const response = await fetch(url);
       if (!response.ok) {
         throw new Error(
           `Failed to fetch weather data. Status: ${response.status}`
         );
+        setError(`Failed to fetch weather data. Status: ${response.status}`)
       }
 
       const data = await response.json();
       setWeatherData({ data });
     } catch (error) {
-      console.error("Error fetching weather data:", error.message);
+      setError(("Error fetching weather data:", error.message))
     }
   };
 
@@ -62,6 +70,7 @@ export const Search = ({ input, setInput, setWeatherData, unit, setUnit }) => {
           Search
         </button>
       </form>
+      {error && <ErrorDisplay errorMessage={error} />}
     </>
   );
 };
