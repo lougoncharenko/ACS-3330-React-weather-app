@@ -1,20 +1,25 @@
 import React, { useEffect, useState } from "react";
 
-export const Search = ({ city, setCity, setWeatherData, unit, setUnit }) => {
-
+export const Search = ({ input, setInput, setWeatherData, unit, setUnit }) => {
   const handleInputChange = (e) => {
-    setCity(e.target.value);
+    console.log(e.target.value);
+    setInput(e.target.value);
   };
 
   const handleUnitChange = (e) => {
     setUnit(e.target.value);
   };
 
-  const fetchWeatherData = async () => {
+  const fetchWeatherData = async (input) => {
     try {
-      const response = await fetch(
-        `https://api.openweathermap.org/data/2.5/weather?q=${city}&units=${unit}&appid=d71be756535b836342b5fa5e644f8f8e`
-      );
+      let url = "";
+      if (/\d/.test(input)) {
+        url = `https://api.openweathermap.org/data/2.5/weather?zip=${input},us&appid=d71be756535b836342b5fa5e644f8f8e`;
+      } else {
+        url = `https://api.openweathermap.org/data/2.5/weather?q=${input}&units=${unit}&appid=d71be756535b836342b5fa5e644f8f8e`;
+      }
+
+      const response = await fetch(url);
       if (!response.ok) {
         throw new Error(
           `Failed to fetch weather data. Status: ${response.status}`
@@ -29,15 +34,12 @@ export const Search = ({ city, setCity, setWeatherData, unit, setUnit }) => {
   };
 
   useEffect(() => {
-    if (!city) {
-      setCity("Sarasota");
-      fetchWeatherData();
-    }
-  }, [city, setCity, unit]); 
+    fetchWeatherData("Sarasota");
+  }, [input, setInput, unit]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    fetchWeatherData();
+    fetchWeatherData(input);
   };
 
   return (
@@ -46,9 +48,9 @@ export const Search = ({ city, setCity, setWeatherData, unit, setUnit }) => {
         <span style={iconStyle}>🔍</span>
         <input
           type="text"
-          value={city}
+          value={input}
           onChange={handleInputChange}
-          placeholder="Enter a city..."
+          placeholder="Enter a city or zipcode..."
           style={inputStyle}
         />
         <select value={unit} onChange={handleUnitChange} style={selectStyle}>
@@ -66,8 +68,12 @@ export const Search = ({ city, setCity, setWeatherData, unit, setUnit }) => {
 const formStyle = {
   display: "flex",
   alignItems: "center",
-  maxWidth: "300px",
-  margin: "0 auto",
+  maxWidth: "600px",
+  margin: "20px auto",
+  backgroundColor: "#f5f5f5",
+  padding: "15px",
+  borderRadius: "8px",
+  boxShadow: "0 0 10px rgba(0, 0, 0, 0.1)",
 };
 
 const iconStyle = {
@@ -79,19 +85,29 @@ const inputStyle = {
   flex: "1",
   padding: "8px",
   fontSize: "1rem",
+  border: "none",
+  borderRadius: "4px",
+  outline: "none",
+  marginRight: "20px",
 };
 
 const selectStyle = {
-  marginLeft: "8px",
-  padding: "8px",
+  padding: "10px",
   fontSize: "1rem",
+  backgroundColor: "#007BFF",
+  color: "#fff",
+  border: "none",
+  borderRadius: "4px",
+  cursor: "pointer",
+  transition: "background-color 0.3s ease",
 };
 
 const buttonStyle = {
   marginLeft: "8px",
   padding: "8px 12px",
   fontSize: "1rem",
-  backgroundColor: "#007BFF",
+  backgroundColor: "gray",
+  borderRadius: "4px",
   color: "#fff",
   border: "none",
   cursor: "pointer",

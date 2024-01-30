@@ -1,16 +1,6 @@
 import React from "react";
 import "./WeatherData.css";
 
-// interface Props {
-//     weatherData:
-// }
-// const place = data.name;
-// const temperature = data.main.temp;
-// const feels = data.main.feels_like;
-// const desc = data.weather[0].description;
-// const humid = data.main.humidity
-// const maxTemp = data.main.temp_max;
-
 export const WeatherData = ({ data, unit }) => {
   const iconurl =
     "http://openweathermap.org/img/wn/" +
