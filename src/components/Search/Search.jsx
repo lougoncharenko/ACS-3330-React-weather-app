@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect} from "react";
 
 export const Search = ({ input, setInput, setWeatherData, unit, setUnit }) => {
   const handleInputChange = (e) => {
@@ -13,8 +13,9 @@ export const Search = ({ input, setInput, setWeatherData, unit, setUnit }) => {
   const fetchWeatherData = async (input) => {
     try {
       let url = "";
+      let secondUrl = '';
       if (/\d/.test(input)) {
-        url = `https://api.openweathermap.org/data/2.5/weather?zip=${input},us&appid=d71be756535b836342b5fa5e644f8f8e`;
+        url = `https://api.openweathermap.org/data/2.5/weather?zip=${input},us&units=${unit}&appid=d71be756535b836342b5fa5e644f8f8e`;
       } else {
         url = `https://api.openweathermap.org/data/2.5/weather?q=${input}&units=${unit}&appid=d71be756535b836342b5fa5e644f8f8e`;
       }
@@ -69,8 +70,7 @@ const formStyle = {
   display: "flex",
   alignItems: "center",
   maxWidth: "600px",
-  margin: "20px auto",
-  backgroundColor: "#f5f5f5",
+  margin: "0 auto",
   padding: "15px",
   borderRadius: "8px",
   boxShadow: "0 0 10px rgba(0, 0, 0, 0.1)",

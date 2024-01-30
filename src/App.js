@@ -3,7 +3,7 @@ import {Layout} from '../src/components/Layout/Layout'
 
 function App() {
   return (
-    <div >
+    <div className='app'>
       <Layout />
     </div>
   );

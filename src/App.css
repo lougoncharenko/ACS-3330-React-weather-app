@@ -1,0 +1,12 @@
+html {
+  margin: 0;
+  padding: 0;
+  background: url('https://i.makeagif.com/media/4-06-2016/CXg7fh.gif');
+  background-size: cover;
+  height: 900px;
+}
+
+.app {
+  margin: 0;
+  padding: 0;
+}
